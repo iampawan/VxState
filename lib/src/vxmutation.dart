@@ -56,7 +56,7 @@ abstract class VxMutation<T extends VxStore> {
       // If an exception happens in exec or VxEffects then
       // it is caught and sent to exception callback. This is
       // useful for showing a generic error message or crash reporting.
-      exception(e, s);
+      onException(e, s);
       VxState.notify(this);
     }
 
@@ -77,11 +77,11 @@ abstract class VxMutation<T extends VxStore> {
   /// [VxEffects.branch] call.
   dynamic make();
 
-  /// [exception] callback receives all the errors with their [StackTrace].
+  /// [onException] callback receives all the errors with their [StackTrace].
   /// If assertions are on, which usually means app is in debug mode, then
   /// both exception and stack trace is printed. This can be overridden by
   /// the mutation implementation.
-  void exception(dynamic e, StackTrace s) {
+  void onException(dynamic e, StackTrace s) {
     var isAssertOn = false;
     assert(isAssertOn = true);
     if (isAssertOn) {
