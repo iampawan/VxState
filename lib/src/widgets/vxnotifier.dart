@@ -11,24 +11,24 @@ typedef ContextCallback = void Function(
 /// Helper widget that executes the provided callbacks with context
 /// on execution of the mutations. Useful to show SnackBar or navigate
 /// to a different route after a mutation.
-class VxNotify extends StatefulWidget {
+class VxNotifier extends StatefulWidget {
   /// Optional child widget
   final Widget child;
 
   /// Map of mutations and their corresponding callback
   final Map<Type, ContextCallback> mutations;
 
-  /// [VxNotify] make callbacks for given mutations
-  VxNotify({
+  /// [VxNotifier] make callbacks for given mutations
+  VxNotifier({
     this.child,
     @required this.mutations,
   }) : assert(mutations != null);
 
   @override
-  _VxNotifyState createState() => _VxNotifyState();
+  _VxNotifierState createState() => _VxNotifierState();
 }
 
-class _VxNotifyState extends State<VxNotify> {
+class _VxNotifierState extends State<VxNotifier> {
   StreamSubscription eventSub;
 
   @override

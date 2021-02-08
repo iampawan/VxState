@@ -4,7 +4,7 @@ import '../vxstate.dart';
 
 /// A stream builder like widget that accepts
 /// mutations and rebuilds after their execution.
-class VxBuild extends StatelessWidget {
+class VxBuilder extends StatelessWidget {
   /// [builder] provides the child widget to rendered.
   final WidgetBuilder builder;
 
@@ -13,7 +13,7 @@ class VxBuild extends StatelessWidget {
 
   /// Creates widget to rerender child widgets when given
   /// [mutations] execute.
-  VxBuild({
+  VxBuilder({
     @required this.builder,
     @required this.mutations,
   }) : assert(mutations != null);
