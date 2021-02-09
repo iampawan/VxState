@@ -13,7 +13,7 @@ abstract class VxMutation<T extends VxStore> {
   /// List of mutation to execute after current one.
   final List<VxMutationBuilder> _laterMutations = [];
 
-  /// A mutation logic inside [make] is executed immediately after
+  /// A mutation logic inside [perform] is executed immediately after
   /// creating an object of the mutation.
   VxMutation() {
     _run();
@@ -30,7 +30,7 @@ abstract class VxMutation<T extends VxStore> {
       // If the execution results in a Future then await it.
       // Useful for building an HTTP request using values from
       // some async source.
-      dynamic result = make();
+      dynamic result = perform();
       if (result is Future) result = await result;
 
       // Notify the widgets that execution is done
@@ -41,7 +41,7 @@ abstract class VxMutation<T extends VxStore> {
       // await that. And finally notify the widgets again about
       // the end of execution.
       if (result != null && this is VxEffects) {
-        dynamic out = (this as VxEffects).branch(result);
+        dynamic out = (this as VxEffects).fork(result);
         if (out is Future) await out;
 
         VxState.notify(this);
@@ -74,8 +74,8 @@ abstract class VxMutation<T extends VxStore> {
   /// This function implements the logic of the mutation.
   /// It can return any value. If it is a [Future] it will be awaited.
   /// If it is [VxEffects] object, result will be piped to its
-  /// [VxEffects.branch] call.
-  dynamic make();
+  /// [VxEffects.fork] call.
+  dynamic perform();
 
   /// [onException] callback receives all the errors with their [StackTrace].
   /// If assertions are on, which usually means app is in debug mode, then
@@ -95,7 +95,8 @@ abstract class VxMutation<T extends VxStore> {
 /// Similar to chaining actions in Redux. For example, an http request
 /// will have a success or a fail side effect after request is complete.
 mixin VxEffects<ON> {
-  dynamic branch(ON result);
+  /// Divide your branches from here to create a chain
+  dynamic fork(ON result);
 }
 
 /// Implementation of this class can be used to act before or after

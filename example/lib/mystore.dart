@@ -26,21 +26,21 @@ class Counter {
 
 class IncrementMutation extends VxMutation<MyStore> {
   @override
-  make() {
+  perform() {
     store.counter.increment();
   }
 }
 
 class DecrementMutation extends VxMutation<MyStore> {
   @override
-  make() {
+  perform() {
     store.counter.decrement();
   }
 }
 
 abstract class HttpEffects implements VxEffects<http.Request> {
   @override
-  branch(http.Request result) async {
+  fork(http.Request result) async {
     final res = await http.Response.fromStream(await result.send());
 
     if (res.statusCode == 200) {
@@ -62,7 +62,7 @@ class FetchApi extends VxMutation<MyStore> with HttpEffects {
   }
 
   @override
-  make() async {
+  perform() async {
     store.isFetching = true;
     return http.Request("GET", Uri.parse("https://google.com"));
   }
