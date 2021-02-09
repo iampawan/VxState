@@ -68,8 +68,8 @@ class VxState extends StatelessWidget {
     super.debugFillProperties(properties);
     if (events != null) {
       events.forEach((element) {
-        properties
-            .add(DiagnosticsProperty(element.runtimeType.toString(), element));
+        properties.add(DiagnosticsProperty(
+            element.runtimeType.toString(), element.store.toString()));
       });
     }
   }
