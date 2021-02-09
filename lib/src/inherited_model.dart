@@ -8,7 +8,8 @@ class _VxStateModel extends InheritedModel {
   _VxStateModel({Widget child, this.recent}) : super(child: child);
 
   @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => true;
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) =>
+      oldWidget.hashCode != recent.hashCode;
 
   @override
   bool updateShouldNotifyDependent(

@@ -11,26 +11,34 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final store = MyStore();
     return VxState(
-      store: MyStore(),
+      store: store,
       interceptors: [LogInterceptor()],
       child: MaterialApp(
         title: 'VxState Demo',
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
         ),
-        home: HomePage(),
+        home: HomePage(
+          store: store,
+        ),
       ),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  final MyStore store;
+
+  const HomePage({Key key, this.store}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    VxState.listen(context, to: [FetchApi]);
+    // final store = VxState.store;
 
-    final MyStore store = VxState.store;
+    VxState.listen(context, to: [FetchApi]);
+    print("Build Called");
+
     return Scaffold(
         appBar: AppBar(
           title: Text("Counter example"),
@@ -48,7 +56,9 @@ class HomePage extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline4,
                   ),
                 ),
-                SizedBox(height: 20.0,),
+                SizedBox(
+                  height: 20.0,
+                ),
                 if (store.isFetching)
                   CircularProgressIndicator()
                 else

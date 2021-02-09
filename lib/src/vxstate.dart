@@ -8,7 +8,9 @@ part 'vxmutation.dart';
 
 /// App's store should extend this class. An instance of this class is
 /// given to [VxState] while initialization only once.
-abstract class VxStore {}
+abstract class VxStore {
+  
+}
 
 /// The coordinating widget that keeps track of mutations
 /// and the notify the same to the listening widgets.
@@ -94,8 +96,13 @@ class VxState extends StatelessWidget {
       builder: (context, _) {
         // Copy all the mutations that executed before
         // current build and clear that buffer
-        final clone = <Type>{}..addAll(_buffer);
-        _buffer.clear();
+        var clone;
+        if (_buffer.isNotEmpty) {
+          clone = <Type>{}..addAll(_buffer);
+          _buffer.clear();
+        } else {
+          clone = _buffer;
+        }
 
         // Rebuild inherited model with all the mutations
         // inside "clone" as the aspects changed
