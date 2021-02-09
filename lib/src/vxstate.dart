@@ -40,7 +40,7 @@ class VxState extends StatelessWidget {
   /// Notifies widgets that mutation has executed.
   static void notify(VxMutation mutation) {
     // Adds the mutation type to the _events stream, for the
-    // _StoreKeeperModel to rebuild, and to _buffer for keeping
+    // _VxStateModel to rebuild, and to _buffer for keeping
     // track of all the mutations in the build cycle.
     _buffer.add(mutation.runtimeType);
     _events.add(mutation);
