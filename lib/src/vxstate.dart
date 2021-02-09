@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 part 'inherited_model.dart';
 part 'vxmutation.dart';
 
 /// App's store should extend this class. An instance of this class is
-/// given to [VxState] while initialization.
+/// given to [VxState] while initialization only once.
 abstract class VxStore {}
 
 /// The coordinating widget that keeps track of mutations
@@ -59,6 +60,17 @@ class VxState extends StatelessWidget {
       context.dependOnInheritedWidgetOfExactType<_VxStateModel>(
         aspect: mutant,
       );
+    }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    if (events != null) {
+      events.forEach((element) {
+        properties
+            .add(DiagnosticsProperty(element.runtimeType.toString(), element));
+      });
     }
   }
 
