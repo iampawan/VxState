@@ -64,7 +64,8 @@ class FetchApi extends VxMutation<MyStore> with HttpEffects {
   @override
   perform() async {
     store.isFetching = true;
-    return http.Request("GET", Uri.parse("https://google.com"));
+    return http.Request(
+        "GET", Uri.parse("https://en8brj58lmty9.x.pipedream.net"));
   }
 
   @override

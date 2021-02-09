@@ -32,39 +32,58 @@ class HomePage extends StatelessWidget {
 
     final MyStore store = VxState.store;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Counter example"),
-        actions: [
-          if (store.isFetching)
-            CircularProgressIndicator(
-              strokeWidth: 10.0,
-              backgroundColor: Colors.white,
-              valueColor: AlwaysStoppedAnimation(Colors.white),
-            )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              store.data,
-            ),
-            VxBuilder(
-              mutations: {IncrementMutation},
-              builder: (ctx) => Text(
-                store.counter.count.toString(),
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text("Counter example"),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => IncrementMutation(),
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                VxBuilder(
+                  mutations: {IncrementMutation, DecrementMutation},
+                  builder: (ctx) => Text(
+                    store.counter.count.toString(),
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+                SizedBox(height: 20.0,),
+                if (store.isFetching)
+                  CircularProgressIndicator()
+                else
+                  Text(
+                    store.data,
+                  ),
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () => IncrementMutation(),
+              tooltip: 'Increment',
+              child: Icon(Icons.add),
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            FloatingActionButton(
+              onPressed: () => DecrementMutation(),
+              tooltip: 'Decrement',
+              child: Icon(Icons.remove),
+            ), //
+            SizedBox(
+              width: 10.0,
+            ), //
+            FloatingActionButton.extended(
+              onPressed: () => FetchApi(),
+              tooltip: 'Fetch API',
+              label: Text("Fetch API"),
+            ), //// This trailing comma makes auto-formatting nicer for build methods.
+          ],
+        ));
   }
 }
