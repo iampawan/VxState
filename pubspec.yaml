@@ -1,8 +1,9 @@
 name: vxstate
-description: A new Flutter package project.
-version: 0.0.1
-author:
-homepage:
+description: Another state management solution for flutter.
+version: 1.0.0
+homepage: https://velocityx.dev
+repository: https://github.com/iampawan/vxstate
+documentation: https://velocityx.dev
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
