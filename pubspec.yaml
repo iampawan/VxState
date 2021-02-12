@@ -1,6 +1,6 @@
 name: vxstate
-description: Another state management solution for flutter.
-version: 1.0.0
+description: VxState is an another state management solution for flutter. It is highly inspired from Redux & VueX.
+version: 1.0.1
 homepage: https://velocityx.dev
 repository: https://github.com/iampawan/vxstate
 documentation: https://velocityx.dev
