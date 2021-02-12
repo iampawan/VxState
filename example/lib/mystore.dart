@@ -3,7 +3,7 @@ import 'package:vxstate/vxstate.dart';
 
 class MyStore extends VxStore {
   final counter = Counter();
-  var data = "";
+  var data = "Hi";
   bool isFetching = false;
 
   @override
@@ -28,6 +28,11 @@ class IncrementMutation extends VxMutation<MyStore> {
   @override
   perform() {
     store.counter.increment();
+  }
+
+  @override
+  void onException(e, StackTrace s) {
+    super.onException(e, s);
   }
 }
 
@@ -57,26 +62,22 @@ abstract class HttpEffects implements VxEffects<http.Request> {
 class FetchApi extends VxMutation<MyStore> with HttpEffects {
   @override
   void fail(http.Response res) {
-    store.isFetching = false;
     store.data = "Failed";
   }
 
   @override
   perform() async {
-    store.isFetching = true;
     return http.Request(
         "GET", Uri.parse("https://en8brj58lmty9.x.pipedream.net"));
   }
 
   @override
   void success(http.Response res) {
-    store.isFetching = false;
     store.data = res.body;
   }
 
   @override
   onException(e, s) {
-    store.isFetching = false;
     store.data = "Exception";
     super.onException(e, s);
   }

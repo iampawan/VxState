@@ -9,7 +9,7 @@ import 'vxnotifier.dart';
 /// mutations and rebuilds after their execution.
 class VxConsumer extends StatefulWidget {
   /// [builder] provides the child widget to rendered.
-  final WidgetBuilder builder;
+  final VxStateWidgetBuilder builder;
 
   /// Widget will rerender every time any of [mutations] executes.
   final Set<Type> mutations;
@@ -58,7 +58,15 @@ class _VxConsumerState extends State<VxConsumer> {
     );
     return StreamBuilder<VxMutation>(
       stream: stream,
-      builder: (context, _) => widget.builder(context),
+      builder: (context, mut) {
+        VxStatus status;
+        if (!mut.hasData || mut.connectionState == ConnectionState.waiting) {
+          status = VxStatus.none;
+        } else {
+          status = mut?.data?.status;
+        }
+        return widget.builder(context, status);
+      },
     );
   }
 }

@@ -10,12 +10,16 @@ abstract class VxMutation<T extends VxStore> {
   /// Reference to the current instance of [Store]
   T get store => VxState.store;
 
+  /// Status of this current mutation
+  VxStatus status;
+
   /// List of mutation to execute after current one.
   final List<VxMutationBuilder> _laterMutations = [];
 
   /// A mutation logic inside [perform] is executed immediately after
   /// creating an object of the mutation.
   VxMutation() {
+    status = VxStatus.none;
     _run();
   }
 
@@ -30,9 +34,10 @@ abstract class VxMutation<T extends VxStore> {
       // If the execution results in a Future then await it.
       // Useful for building an HTTP request using values from
       // some async source.
+
       dynamic result = perform();
       if (result is Future) result = await result;
-
+      status = VxStatus.success;
       // Notify the widgets that execution is done
       VxState.notify(this);
 
@@ -42,8 +47,9 @@ abstract class VxMutation<T extends VxStore> {
       // the end of execution.
       if (result != null && this is VxEffects) {
         dynamic out = (this as VxEffects).fork(result);
+        status = VxStatus.loading;
         if (out is Future) await out;
-
+        status = VxStatus.success;
         VxState.notify(this);
       }
 
@@ -53,6 +59,7 @@ abstract class VxMutation<T extends VxStore> {
       }
       // ignore: avoid_catches_without_on_clauses
     } catch (e, s) {
+      status = VxStatus.error;
       // If an exception happens in exec or VxEffects then
       // it is caught and sent to exception callback. This is
       // useful for showing a generic error message or crash reporting.

@@ -34,9 +34,7 @@ class HomePage extends StatelessWidget {
   const HomePage({Key key, this.store}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // final store = VxState.store;
-
-    VxState.listen(context, to: [FetchApi]);
+    // VxState.listen(context, to: [FetchApi]);
     print("Build Called");
 
     return Scaffold(
@@ -50,21 +48,36 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 VxBuilder(
-                  mutations: {IncrementMutation, DecrementMutation},
-                  builder: (ctx) => Text(
-                    store.counter.count.toString(),
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
+                    mutations: {IncrementMutation, DecrementMutation},
+                    builder: (ctx, _) {
+                      if (store.isFetching)
+                        return CircularProgressIndicator();
+                      else
+                        return Text(
+                          "${store.counter.count.toString()}",
+                          style: Theme.of(context).textTheme.headline4,
+                        );
+                    }),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  "${store.data}",
                 ),
                 SizedBox(
                   height: 20.0,
                 ),
-                if (store.isFetching)
-                  CircularProgressIndicator()
-                else
-                  Text(
-                    store.data,
-                  ),
+                VxBuilder(
+                    builder: (context, status) {
+                      print("$status");
+                      if (status == VxStatus.loading)
+                        return CircularProgressIndicator();
+                      else
+                        return Text(
+                          "${status} ${store.data}",
+                        );
+                    },
+                    mutations: {FetchApi})
               ],
             ),
           ),

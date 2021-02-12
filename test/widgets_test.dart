@@ -64,7 +64,7 @@ class ExampleBuilderWidget extends StatelessWidget {
     final store = VxState.store as TestStore;
     return VxBuilder(
       mutations: {Increment},
-      builder: (_) => Text("count is ${store.count}"),
+      builder: (_, mut) => Text("count is ${store.count}"),
     );
   }
 }

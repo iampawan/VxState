@@ -6,11 +6,18 @@ import 'package:flutter/material.dart';
 part 'inherited_model.dart';
 part 'vxmutation.dart';
 
+/// VxWidgetBuilder gives context and status back.
+/// Status are more useful when you use vx effects
+typedef VxStateWidgetBuilder = Widget Function(
+    BuildContext context, VxStatus status);
+
+/// Status about the current state
+// ignore: public_member_api_docs
+enum VxStatus { none, loading, success, error }
+
 /// App's store should extend this class. An instance of this class is
 /// given to [VxState] while initialization only once.
-abstract class VxStore {
-  
-}
+abstract class VxStore {}
 
 /// The coordinating widget that keeps track of mutations
 /// and the notify the same to the listening widgets.

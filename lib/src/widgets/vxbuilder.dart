@@ -6,7 +6,7 @@ import '../vxstate.dart';
 /// mutations and rebuilds after their execution.
 class VxBuilder extends StatelessWidget {
   /// [builder] provides the child widget to rendered.
-  final WidgetBuilder builder;
+  final VxStateWidgetBuilder builder;
 
   /// Widget will rerender every time any of [mutations] executes.
   final Set<Type> mutations;
@@ -25,7 +25,15 @@ class VxBuilder extends StatelessWidget {
     );
     return StreamBuilder<VxMutation>(
       stream: stream,
-      builder: (context, _) => builder(context),
+      builder: (context, mut) {
+        VxStatus status;
+        if (!mut.hasData || mut.connectionState == ConnectionState.waiting) {
+          status = VxStatus.none;
+        } else {
+          status = mut?.data?.status;
+        }
+        return builder(context, status);
+      },
     );
   }
 }
