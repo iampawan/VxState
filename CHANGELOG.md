@@ -1,3 +1,7 @@
+## [2.0.1]
+
+- VxState.listen(to: ) is now VxState.watch(on: )
+
 ## [2.0.0]
 
 - Null Safety Enabled

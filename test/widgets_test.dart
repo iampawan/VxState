@@ -52,7 +52,7 @@ class Increment extends VxMutation<TestStore> {
 class ExampleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    VxState.listen(context, to: [Increment]);
+    VxState.watch(context, on: [Increment]);
     final store = VxState.store as TestStore;
     return Text("count is ${store.count}");
   }

@@ -63,10 +63,10 @@ class VxState extends StatelessWidget {
     return _events.stream.where((e) => e.runtimeType == mutation);
   }
 
-  /// Attaches context to the mutations given in `to` param.
+  /// Attaches context to the mutations given in `on` param.
   /// When a mutation specified execute widget will rebuild.
-  static void listen(BuildContext context, {required List<Type> to}) {
-    for (final mutant in to) {
+  static void watch(BuildContext context, {required List<Type> on}) {
+    for (final mutant in on) {
       context.dependOnInheritedWidgetOfExactType<_VxStateModel>(
         aspect: mutant,
       );
