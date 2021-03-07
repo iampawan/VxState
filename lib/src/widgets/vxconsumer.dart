@@ -19,19 +19,18 @@ class VxConsumer extends StatefulWidget {
 
   /// Creates widget to rerender child widgets when given
   /// [mutations] execute.
-  VxConsumer({
-    @required this.builder,
-    @required this.mutations,
-    @required this.notifications,
-  })  : assert(mutations != null),
-        assert(notifications != null);
+  const VxConsumer({
+    required this.builder,
+    required this.mutations,
+    required this.notifications,
+  });
 
   @override
   _VxConsumerState createState() => _VxConsumerState();
 }
 
 class _VxConsumerState extends State<VxConsumer> {
-  StreamSubscription eventSub;
+  StreamSubscription? eventSub;
 
   @override
   void initState() {
@@ -59,11 +58,11 @@ class _VxConsumerState extends State<VxConsumer> {
     return StreamBuilder<VxMutation>(
       stream: stream,
       builder: (context, mut) {
-        VxStatus status;
+        VxStatus? status;
         if (!mut.hasData || mut.connectionState == ConnectionState.waiting) {
           status = VxStatus.none;
         } else {
-          status = mut?.data?.status;
+          status = mut.data?.status;
         }
         return widget.builder(context, status);
       },

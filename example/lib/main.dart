@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   final MyStore store;
 
-  const HomePage({Key key, this.store}) : super(key: key);
+  const HomePage({Key? key, required this.store}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     // VxState.listen(context, to: [FetchApi]);
@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Counter example"),
+          title: const Text("Counter example"),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -51,30 +51,30 @@ class HomePage extends StatelessWidget {
                     mutations: {IncrementMutation, DecrementMutation},
                     builder: (ctx, _) {
                       if (store.isFetching)
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       else
                         return Text(
                           "${store.counter.count.toString()}",
                           style: Theme.of(context).textTheme.headline4,
                         );
                     }),
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Text(
                   "${store.data}",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 VxBuilder(
                     builder: (context, status) {
                       print("$status");
                       if (status == VxStatus.loading)
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       else
                         return Text(
-                          "${status} ${store.data}",
+                          "$status ${store.data}",
                         );
                     },
                     mutations: {FetchApi})
@@ -88,23 +88,23 @@ class HomePage extends StatelessWidget {
             FloatingActionButton(
               onPressed: () => IncrementMutation(),
               tooltip: 'Increment',
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ),
             FloatingActionButton(
               onPressed: () => DecrementMutation(),
               tooltip: 'Decrement',
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ), //
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ), //
             FloatingActionButton.extended(
               onPressed: () => FetchApi(),
               tooltip: 'Fetch API',
-              label: Text("Fetch API"),
+              label: const Text("Fetch API"),
             ), //// This trailing comma makes auto-formatting nicer for build methods.
           ],
         ));

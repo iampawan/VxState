@@ -13,10 +13,10 @@ class VxBuilder extends StatelessWidget {
 
   /// Creates widget to rerender child widgets when given
   /// [mutations] execute.
-  VxBuilder({
-    @required this.builder,
-    @required this.mutations,
-  }) : assert(mutations != null);
+  const VxBuilder({
+    required this.builder,
+    required this.mutations,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,11 @@ class VxBuilder extends StatelessWidget {
     return StreamBuilder<VxMutation>(
       stream: stream,
       builder: (context, mut) {
-        VxStatus status;
+        VxStatus? status;
         if (!mut.hasData || mut.connectionState == ConnectionState.waiting) {
           status = VxStatus.none;
         } else {
-          status = mut?.data?.status;
+          status = mut.data?.status;
         }
         return builder(context, status);
       },

@@ -13,23 +13,23 @@ typedef ContextCallback = void Function(
 /// to a different route after a mutation.
 class VxNotifier extends StatefulWidget {
   /// Optional child widget
-  final Widget child;
+  final Widget? child;
 
   /// Map of mutations and their corresponding callback
   final Map<Type, ContextCallback> mutations;
 
   /// [VxNotifier] make callbacks for given mutations
-  VxNotifier({
+  const VxNotifier({
     this.child,
-    @required this.mutations,
-  }) : assert(mutations != null);
+    required this.mutations,
+  });
 
   @override
   _VxNotifierState createState() => _VxNotifierState();
 }
 
 class _VxNotifierState extends State<VxNotifier> {
-  StreamSubscription eventSub;
+  StreamSubscription? eventSub;
 
   @override
   void initState() {
@@ -52,6 +52,6 @@ class _VxNotifierState extends State<VxNotifier> {
   @override
   Widget build(BuildContext context) {
     // allow null child
-    return widget.child ?? SizedBox();
+    return widget.child ?? const SizedBox();
   }
 }

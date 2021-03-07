@@ -11,7 +11,7 @@ class TestStore extends VxStore {
 class Increment extends VxMutation<TestStore> {
   @override
   void perform() {
-    store.count++;
+    store!.count++;
   }
 }
 
@@ -19,9 +19,9 @@ class AsyncIncrement extends VxMutation<TestStore> {
   final Completer comp = Completer();
 
   @override
-  void perform() async {
-    await Future.delayed(Duration(milliseconds: 10));
-    store.count++;
+  Future<void> perform() async {
+    await Future.delayed(const Duration(milliseconds: 10));
+    store!.count++;
     comp.complete();
   }
 }
@@ -52,12 +52,12 @@ class MutationCounter extends VxInterceptor {
   int finished = 0;
 
   @override
-  bool beforeMutation(VxMutation<VxStore> mutation) {
+  bool beforeMutation(VxMutation<VxStore?> mutation) {
     return true;
   }
 
   @override
-  void afterMutation(VxMutation<VxStore> mutation) {
+  void afterMutation(VxMutation<VxStore?> mutation) {
     finished++;
   }
 }
@@ -66,7 +66,7 @@ class MutationRejector extends VxInterceptor {
   int rejected = 0;
 
   @override
-  bool beforeMutation(VxMutation<VxStore> mutation) {
+  bool beforeMutation(VxMutation<VxStore?> mutation) {
     if (mutation is Increment) {
       rejected++;
       return false;
@@ -75,7 +75,7 @@ class MutationRejector extends VxInterceptor {
   }
 
   @override
-  void afterMutation(VxMutation<VxStore> mutation) {}
+  void afterMutation(VxMutation<VxStore?> mutation) {}
 }
 
 void main() {
