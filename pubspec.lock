@@ -87,12 +87,12 @@ packages:
     source: sdk
     version: "0.0.99"
   source_span:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.0"
   stack_trace:
     dependency: transitive
     description:
