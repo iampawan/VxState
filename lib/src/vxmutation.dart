@@ -36,10 +36,11 @@ abstract class VxMutation<T extends VxStore?> {
       // If the execution results in a Future then await it.
       // Useful for building an HTTP request using values from
       // some async source.
-      status = VxStatus.loading;
-      VxState.notify(this);
+
       dynamic result = perform();
       if (result is Future) {
+        status = VxStatus.loading;
+        VxState.notify(this);
         result = await result;
       }
 
