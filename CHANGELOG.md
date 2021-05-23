@@ -1,3 +1,10 @@
+## [2.1.0]
+
+- VxBuilder & VxConsumer now returns store.
+- Store can be directly accessed as MyStore store = VxState.store
+- Status for all async operations
+- Bug Fixes
+
 ## [2.0.1]
 
 - VxState.listen(to: ) is now VxState.watch(on: )
