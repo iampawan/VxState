@@ -36,14 +36,12 @@ abstract class VxMutation<T extends VxStore?> {
       // If the execution results in a Future then await it.
       // Useful for building an HTTP request using values from
       // some async source.
-
+      status = VxStatus.loading;
+      VxState.notify(this);
       dynamic result = perform();
       if (result is Future) {
         result = await result;
       }
-      status = VxStatus.success;
-      // Notify the widgets that execution is done
-      VxState.notify(this);
 
       // If the result is a VxEffects object then pipe the
       // result to the branch function. If its result is async
@@ -51,13 +49,15 @@ abstract class VxMutation<T extends VxStore?> {
       // the end of execution.
       if (result != null && this is VxEffects) {
         final dynamic out = (this as VxEffects).fork(result);
-        status = VxStatus.loading;
         if (out is Future) {
           await out;
         }
         status = VxStatus.success;
         VxState.notify(this);
       }
+      // Notify the widgets that execution is done
+      VxState.notify(this);
+      status = VxStatus.success;
 
       // Once this is done execute all the deferred mutations
       for (final mut in _laterMutations) {

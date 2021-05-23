@@ -26,7 +26,8 @@ class Counter {
 
 class IncrementMutation extends VxMutation<MyStore> {
   @override
-  void perform() {
+  Future<void> perform() async {
+    await Future.delayed(const Duration(seconds: 1));
     store?.counter.increment();
   }
 
@@ -43,15 +44,13 @@ class DecrementMutation extends VxMutation<MyStore> {
   }
 }
 
-abstract class HttpEffects implements VxEffects<http.Request> {
+abstract class HttpEffects implements VxEffects<http.Response> {
   @override
-  Future<void> fork(http.Request result) async {
-    final res = await http.Response.fromStream(await result.send());
-
-    if (res.statusCode == 200) {
-      success(res);
+  Future<void> fork(http.Response result) async {
+    if (result.statusCode == 200) {
+      success(result);
     } else {
-      fail(res);
+      fail(result);
     }
   }
 
@@ -66,9 +65,8 @@ class FetchApi extends VxMutation<MyStore> with HttpEffects {
   }
 
   @override
-  Future<http.Request> perform() async {
-    return http.Request(
-        "GET", Uri.parse("https://en8brj58lmty9.x.pipedream.net"));
+  Future<http.Response> perform() async {
+    return http.get(Uri.parse("https://en8brj58lmty9.x.pipedream.net"));
   }
 
   @override

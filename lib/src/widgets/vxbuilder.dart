@@ -4,9 +4,9 @@ import '../vxstate.dart';
 
 /// A stream builder like widget that accepts
 /// mutations and rebuilds after their execution.
-class VxBuilder extends StatelessWidget {
+class VxBuilder<T> extends StatelessWidget {
   /// [builder] provides the child widget to rendered.
-  final VxStateWidgetBuilder builder;
+  final VxStateWidgetBuilder<T> builder;
 
   /// Widget will rerender every time any of [mutations] executes.
   final Set<Type> mutations;
@@ -32,7 +32,7 @@ class VxBuilder extends StatelessWidget {
         } else {
           status = mut.data?.status;
         }
-        return builder(context, status);
+        return builder(context, VxState.store as T, status);
       },
     );
   }

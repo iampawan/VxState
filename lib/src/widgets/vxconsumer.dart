@@ -7,9 +7,9 @@ import 'vxnotifier.dart';
 
 /// A stream builder like widget that accepts
 /// mutations and rebuilds after their execution.
-class VxConsumer extends StatefulWidget {
+class VxConsumer<T> extends StatefulWidget {
   /// [builder] provides the child widget to rendered.
-  final VxStateWidgetBuilder builder;
+  final VxStateWidgetBuilder<T> builder;
 
   /// Widget will rerender every time any of [mutations] executes.
   final Set<Type> mutations;
@@ -26,10 +26,10 @@ class VxConsumer extends StatefulWidget {
   });
 
   @override
-  _VxConsumerState createState() => _VxConsumerState();
+  _VxConsumerState createState() => _VxConsumerState<T>();
 }
 
-class _VxConsumerState extends State<VxConsumer> {
+class _VxConsumerState<T> extends State<VxConsumer> {
   StreamSubscription? eventSub;
 
   @override
@@ -64,7 +64,7 @@ class _VxConsumerState extends State<VxConsumer> {
         } else {
           status = mut.data?.status;
         }
-        return widget.builder(context, status);
+        return widget.builder(context, VxState.store as T, status);
       },
     );
   }
