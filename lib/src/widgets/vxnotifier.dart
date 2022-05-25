@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../vxstate.dart';
 
 /// Function signature for the callback with context.
-typedef ContextCallback = void Function(
-    BuildContext context, VxMutation mutation);
+typedef ContextCallback = void
+    Function(BuildContext context, VxMutation mutation, {VxStatus? status});
 
 /// Helper widget that executes the provided callbacks with context
 /// on execution of the mutations. Useful to show SnackBar or navigate
@@ -19,10 +19,7 @@ class VxNotifier extends StatefulWidget {
   final Map<Type, ContextCallback> mutations;
 
   /// [VxNotifier] make callbacks for given mutations
-  const VxNotifier({
-    this.child,
-    required this.mutations,
-  });
+  const VxNotifier({this.child, required this.mutations});
 
   @override
   _VxNotifierState createState() => _VxNotifierState();
@@ -39,7 +36,7 @@ class _VxNotifierState extends State<VxNotifier> {
       (e) => mutations.contains(e.runtimeType),
     );
     eventSub = stream.listen((e) {
-      widget.mutations[e.runtimeType]?.call(context, e);
+      widget.mutations[e.runtimeType]?.call(context, e, status: e.status);
     });
   }
 

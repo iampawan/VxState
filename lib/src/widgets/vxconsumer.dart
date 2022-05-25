@@ -15,14 +15,14 @@ class VxConsumer<T> extends StatefulWidget {
   final Set<Type> mutations;
 
   /// Map of mutations and their corresponding callback
-  final Map<Type, ContextCallback> notifications;
+  final Map<Type, ContextCallback>? notifications;
 
   /// Creates widget to rerender child widgets when given
   /// [mutations] execute.
   const VxConsumer({
     required this.builder,
     required this.mutations,
-    required this.notifications,
+    this.notifications,
   });
 
   @override
@@ -35,13 +35,16 @@ class _VxConsumerState<T> extends State<VxConsumer> {
   @override
   void initState() {
     super.initState();
-    final notifications = widget.notifications.keys.toSet();
-    final stream = VxState.events.where(
-      (e) => notifications.contains(e.runtimeType),
-    );
-    eventSub = stream.listen((e) {
-      widget.notifications[e.runtimeType]?.call(context, e);
-    });
+    if (widget.notifications != null) {
+      final notifications = widget.notifications!.keys.toSet();
+      final stream = VxState.events.where(
+        (e) => notifications.contains(e.runtimeType),
+      );
+      eventSub = stream.listen((e) {
+        widget.notifications![e.runtimeType]
+            ?.call(context, e, status: e.status);
+      });
+    }
   }
 
   @override
@@ -64,7 +67,8 @@ class _VxConsumerState<T> extends State<VxConsumer> {
         } else {
           status = mut.data?.status;
         }
-        return widget.builder(context, VxState.store as T, status);
+        final _store = VxState.store as T;
+        return widget.builder(context, _store, status);
       },
     );
   }

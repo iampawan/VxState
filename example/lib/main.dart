@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  VxBuilder<MyStore>(
+                  VxConsumer<MyStore>(
                       mutations: {IncrementMutation, DecrementMutation},
                       builder: (ctx, store, status) {
                         if (status == VxStatus.loading)
