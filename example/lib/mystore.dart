@@ -1,5 +1,5 @@
-import 'package:vxstate/vxstate.dart';
 import 'package:http/http.dart' as http;
+import 'package:vxstate/vxstate.dart';
 
 class MyStore extends VxStore {
   final counter = Counter();

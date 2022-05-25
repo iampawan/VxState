@@ -1,3 +1,8 @@
+## [2.2.0]
+
+- VxConsumer improved with notifications as optional and also returns status.
+- Bug Fixes
+
 ## [2.1.0]
 
 - VxBuilder & VxConsumer now returns store.
