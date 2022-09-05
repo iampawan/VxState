@@ -9,7 +9,7 @@ part 'vxmutation.dart';
 /// VxWidgetBuilder gives context and status back.
 /// Status are more useful when you use vx effects
 typedef VxStateWidgetBuilder<T> = Widget Function(
-    BuildContext context, dynamic store, VxStatus? status);
+    BuildContext context, T store, VxStatus? status);
 
 /// Status about the current state
 // ignore: public_member_api_docs
