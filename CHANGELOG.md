@@ -1,3 +1,8 @@
+## [2.3.0]
+
+- Store is not dynamic anymore.
+- Minor upgrades
+
 ## [2.2.0]
 
 - VxConsumer improved with notifications as optional and also returns status.
