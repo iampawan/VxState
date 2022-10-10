@@ -24,7 +24,7 @@ dependencies:
   cupertino_icons: ^1.0.1
   flutter:
     sdk: flutter
-  http: ^0.13.3
+  http: ^0.13.5
   vxstate:
     path: ../
 
