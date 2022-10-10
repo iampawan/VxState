@@ -9,7 +9,7 @@ part 'vxmutation.dart';
 /// VxWidgetBuilder gives context and status back.
 /// Status are more useful when you use vx effects
 typedef VxStateWidgetBuilder<T> = Widget Function(
-    BuildContext context, dynamic store, VxStatus? status);
+    BuildContext context, T store, VxStatus? status);
 
 /// Status about the current state
 // ignore: public_member_api_docs
@@ -37,11 +37,11 @@ class VxState extends StatelessWidget {
   static Stream<VxMutation> get events => _events.stream;
 
   /// Single store approach. This is set when initializing the app.
-  static VxStore? _store;
+  static late VxStore? _store;
 
   /// Getter to get the current instance of [VxStore]. It can be
   /// casted to appropriate type by the widgets.
-  static dynamic get store => _store!;
+  static VxStore get store => _store!;
 
   /// Keeps the set of mutations executed between previous and
   /// current build cycle.

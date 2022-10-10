@@ -29,7 +29,7 @@ class VxConsumer<T> extends StatefulWidget {
   _VxConsumerState createState() => _VxConsumerState<T>();
 }
 
-class _VxConsumerState<T> extends State<VxConsumer> {
+class _VxConsumerState<T> extends State<VxConsumer<T>> {
   StreamSubscription? eventSub;
 
   @override
@@ -67,7 +67,7 @@ class _VxConsumerState<T> extends State<VxConsumer> {
         } else {
           status = mut.data?.status;
         }
-        final _store = VxState.store as T;
+        final T _store = VxState.store as T;
         return widget.builder(context, _store, status);
       },
     );

@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final MyStore store = VxState.store;
+    final MyStore store = VxState.store as MyStore;
     // VxState.listen(context, to: [FetchApi]);
     print("Build Called");
 
@@ -49,16 +49,17 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   VxConsumer<MyStore>(
-                      mutations: {IncrementMutation, DecrementMutation},
-                      builder: (ctx, store, status) {
-                        if (status == VxStatus.loading)
-                          return const CircularProgressIndicator();
-                        else
-                          return Text(
-                            "${store.counter.count.toString()}",
-                            style: Theme.of(context).textTheme.headline4,
-                          );
-                      }),
+                    mutations: {IncrementMutation, DecrementMutation},
+                    builder: (ctx, store, status) {
+                      if (status == VxStatus.loading)
+                        return const CircularProgressIndicator();
+                      else
+                        return Text(
+                          "${store.counter.count.toString()}",
+                          style: Theme.of(context).textTheme.headline4,
+                        );
+                    },
+                  ),
                   const SizedBox(
                     height: 20.0,
                   ),
