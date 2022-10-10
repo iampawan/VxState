@@ -15,19 +15,20 @@ class MyStore extends VxStore {
 class Counter {
   int count = 0;
 
-  increment() {
+  void increment() {
     count++;
   }
 
-  decrement() {
+  void decrement() {
     count--;
   }
 }
 
 class IncrementMutation extends VxMutation<MyStore> {
   @override
-  perform() {
-    store.counter.increment();
+  Future<void> perform() async {
+    await Future.delayed(const Duration(seconds: 1));
+    store?.counter.increment();
   }
 
   @override
@@ -38,20 +39,18 @@ class IncrementMutation extends VxMutation<MyStore> {
 
 class DecrementMutation extends VxMutation<MyStore> {
   @override
-  perform() {
-    store.counter.decrement();
+  void perform() {
+    store?.counter.decrement();
   }
 }
 
-abstract class HttpEffects implements VxEffects<http.Request> {
+abstract class HttpEffects implements VxEffects<http.Response> {
   @override
-  fork(http.Request result) async {
-    final res = await http.Response.fromStream(await result.send());
-
-    if (res.statusCode == 200) {
-      success(res);
+  Future<void> fork(http.Response result) async {
+    if (result.statusCode == 200) {
+      success(result);
     } else {
-      fail(res);
+      fail(result);
     }
   }
 
@@ -62,35 +61,34 @@ abstract class HttpEffects implements VxEffects<http.Request> {
 class FetchApi extends VxMutation<MyStore> with HttpEffects {
   @override
   void fail(http.Response res) {
-    store.data = "Failed";
+    store?.data = "Failed";
   }
 
   @override
-  perform() async {
-    return http.Request(
-        "GET", Uri.parse("https://en8brj58lmty9.x.pipedream.net"));
+  Future<http.Response> perform() async {
+    return http.get(Uri.parse("https://en8brj58lmty9.x.pipedream.net"));
   }
 
   @override
   void success(http.Response res) {
-    store.data = res.body;
+    store?.data = res.body;
   }
 
   @override
-  onException(e, s) {
-    store.data = "Exception";
+  void onException(e, s) {
+    store?.data = "Exception";
     super.onException(e, s);
   }
 }
 
 class LogInterceptor extends VxInterceptor {
   @override
-  void afterMutation(VxMutation<VxStore> mutation) {
+  void afterMutation(VxMutation<VxStore?> mutation) {
     print("Next State ${mutation.store.toString()}");
   }
 
   @override
-  bool beforeMutation(VxMutation<VxStore> mutation) {
+  bool beforeMutation(VxMutation<VxStore?> mutation) {
     print("Prev State ${mutation.store.toString()}");
     return true;
   }

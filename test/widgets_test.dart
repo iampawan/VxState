@@ -45,14 +45,14 @@ class TestStore extends VxStore {
 class Increment extends VxMutation<TestStore> {
   @override
   void perform() {
-    store.count++;
+    store!.count++;
   }
 }
 
 class ExampleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    VxState.listen(context, to: [Increment]);
+    VxState.watch(context, on: [Increment]);
     final store = VxState.store as TestStore;
     return Text("count is ${store.count}");
   }
@@ -61,10 +61,14 @@ class ExampleWidget extends StatelessWidget {
 class ExampleBuilderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final store = VxState.store as TestStore;
-    return VxBuilder(
+    return VxBuilder<TestStore>(
       mutations: {Increment},
-      builder: (_, mut) => Text("count is ${store.count}"),
+      builder: (
+        _,
+        store,
+        mut,
+      ) =>
+          Text("count is ${store.count}"),
     );
   }
 }

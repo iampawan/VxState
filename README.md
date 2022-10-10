@@ -43,10 +43,10 @@ Listen to mutations:
 @override
 Widget build(BuildContext context) {
   // Define when this widget should re render
-  VxState.listen(context, to: [Increment]);
+  VxState.watch(context, on: [Increment]);
 
   // Get access to the store
-  MyStore store = VxState.store;
+  MyStore store = VxState.store as MyStore;
 
   return Text("${store.count}");
 }
@@ -80,10 +80,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Define when this widget should re render
-    VxState.listen(context, to: [Increment]);
+    VxState.watch(context, on: [Increment]);
 
     // Get access to the store
-    MyStore store = VxState.store;
+    MyStore store = VxState.store as MyStore;
 
     return MaterialApp(
       home: Scaffold(

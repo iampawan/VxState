@@ -6,12 +6,12 @@ typedef VxMutationBuilder = VxMutation Function();
 
 /// An implementation of this class holds the logic for updating the [VxStore].
 
-abstract class VxMutation<T extends VxStore> {
+abstract class VxMutation<T extends VxStore?> {
   /// Reference to the current instance of [Store]
-  T get store => VxState.store;
+  T? get store => VxState.store as T?;
 
   /// Status of this current mutation
-  VxStatus status;
+  VxStatus? status;
 
   /// List of mutation to execute after current one.
   final List<VxMutationBuilder> _laterMutations = [];
@@ -24,10 +24,12 @@ abstract class VxMutation<T extends VxStore> {
   }
 
   /// [_run] executes mutation.
-  void _run() async {
+  Future<void> _run() async {
     // Execute all the interceptors. If returns false cancel mutation.
-    for (var i in VxState._interceptors) {
-      if (!i.beforeMutation(this)) return;
+    for (final i in VxState._interceptors) {
+      if (!i.beforeMutation(this)) {
+        return;
+      }
     }
 
     try {
@@ -36,25 +38,30 @@ abstract class VxMutation<T extends VxStore> {
       // some async source.
 
       dynamic result = perform();
-      if (result is Future) result = await result;
-      status = VxStatus.success;
-      // Notify the widgets that execution is done
-      VxState.notify(this);
+      if (result is Future) {
+        status = VxStatus.loading;
+        VxState.notify(this);
+        result = await result;
+      }
 
       // If the result is a VxEffects object then pipe the
       // result to the branch function. If its result is async
       // await that. And finally notify the widgets again about
       // the end of execution.
       if (result != null && this is VxEffects) {
-        dynamic out = (this as VxEffects).fork(result);
-        status = VxStatus.loading;
-        if (out is Future) await out;
+        final dynamic out = (this as VxEffects).fork(result);
+        if (out is Future) {
+          await out;
+        }
         status = VxStatus.success;
         VxState.notify(this);
       }
+      // Notify the widgets that execution is done
+      VxState.notify(this);
+      status = VxStatus.success;
 
       // Once this is done execute all the deferred mutations
-      for (var mut in _laterMutations) {
+      for (final mut in _laterMutations) {
         mut();
       }
       // ignore: avoid_catches_without_on_clauses
@@ -68,7 +75,7 @@ abstract class VxMutation<T extends VxStore> {
     }
 
     // Execute all the interceptors.
-    for (var i in VxState._interceptors) {
+    for (final i in VxState._interceptors) {
       i.afterMutation(this);
     }
   }

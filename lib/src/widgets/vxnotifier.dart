@@ -5,31 +5,28 @@ import 'package:flutter/material.dart';
 import '../vxstate.dart';
 
 /// Function signature for the callback with context.
-typedef ContextCallback = void Function(
-    BuildContext context, VxMutation mutation);
+typedef ContextCallback = void
+    Function(BuildContext context, VxMutation mutation, {VxStatus? status});
 
 /// Helper widget that executes the provided callbacks with context
 /// on execution of the mutations. Useful to show SnackBar or navigate
 /// to a different route after a mutation.
 class VxNotifier extends StatefulWidget {
   /// Optional child widget
-  final Widget child;
+  final Widget? child;
 
   /// Map of mutations and their corresponding callback
   final Map<Type, ContextCallback> mutations;
 
   /// [VxNotifier] make callbacks for given mutations
-  VxNotifier({
-    this.child,
-    @required this.mutations,
-  }) : assert(mutations != null);
+  const VxNotifier({this.child, required this.mutations});
 
   @override
   _VxNotifierState createState() => _VxNotifierState();
 }
 
 class _VxNotifierState extends State<VxNotifier> {
-  StreamSubscription eventSub;
+  StreamSubscription? eventSub;
 
   @override
   void initState() {
@@ -39,7 +36,7 @@ class _VxNotifierState extends State<VxNotifier> {
       (e) => mutations.contains(e.runtimeType),
     );
     eventSub = stream.listen((e) {
-      widget.mutations[e.runtimeType]?.call(context, e);
+      widget.mutations[e.runtimeType]?.call(context, e, status: e.status);
     });
   }
 
@@ -52,6 +49,6 @@ class _VxNotifierState extends State<VxNotifier> {
   @override
   Widget build(BuildContext context) {
     // allow null child
-    return widget.child ?? SizedBox();
+    return widget.child ?? const SizedBox();
   }
 }

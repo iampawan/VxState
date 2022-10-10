@@ -20,65 +20,68 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
         ),
-        home: HomePage(
-          store: store,
-        ),
+        home: const HomePage(),
       ),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-  final MyStore store;
-
-  const HomePage({Key key, this.store}) : super(key: key);
+  const HomePage({
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // VxState.listen(context, to: [FetchApi]);
+    final MyStore store = VxState.store as MyStore;
+    // VxState.watch(context, on: [FetchApi]);
     print("Build Called");
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Counter example"),
+          title: const Text("Counter example"),
         ),
         body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                VxBuilder(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  VxConsumer<MyStore>(
                     mutations: {IncrementMutation, DecrementMutation},
-                    builder: (ctx, _) {
-                      if (store.isFetching)
-                        return CircularProgressIndicator();
+                    builder: (ctx, store, status) {
+                      if (status == VxStatus.loading)
+                        return const CircularProgressIndicator();
                       else
                         return Text(
                           "${store.counter.count.toString()}",
                           style: Theme.of(context).textTheme.headline4,
                         );
-                    }),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  "${store.data}",
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                VxBuilder(
-                    builder: (context, status) {
-                      print("$status");
-                      if (status == VxStatus.loading)
-                        return CircularProgressIndicator();
-                      else
-                        return Text(
-                          "${status} ${store.data}",
-                        );
                     },
-                    mutations: {FetchApi})
-              ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    "${store.data}",
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  VxBuilder<MyStore>(
+                      builder: (context, store, status) {
+                        print("$status");
+                        if (status == VxStatus.loading)
+                          return const CircularProgressIndicator();
+                        else
+                          return Text(
+                            "$status ${store.data}",
+                          );
+                      },
+                      mutations: {FetchApi})
+                ],
+              ),
             ),
           ),
         ),
@@ -88,23 +91,23 @@ class HomePage extends StatelessWidget {
             FloatingActionButton(
               onPressed: () => IncrementMutation(),
               tooltip: 'Increment',
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ),
             FloatingActionButton(
               onPressed: () => DecrementMutation(),
               tooltip: 'Decrement',
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ), //
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ), //
             FloatingActionButton.extended(
               onPressed: () => FetchApi(),
               tooltip: 'Fetch API',
-              label: Text("Fetch API"),
+              label: const Text("Fetch API"),
             ), //// This trailing comma makes auto-formatting nicer for build methods.
           ],
         ));

@@ -8,8 +8,8 @@ part 'vxmutation.dart';
 
 /// VxWidgetBuilder gives context and status back.
 /// Status are more useful when you use vx effects
-typedef VxStateWidgetBuilder = Widget Function(
-    BuildContext context, VxStatus status);
+typedef VxStateWidgetBuilder<T> = Widget Function(
+    BuildContext context, T store, VxStatus? status);
 
 /// Status about the current state
 // ignore: public_member_api_docs
@@ -23,24 +23,25 @@ abstract class VxStore {}
 /// and the notify the same to the listening widgets.
 class VxState extends StatelessWidget {
   /// App's root widget
-  final Widget child;
+  final Widget? child;
 
   /// List of all mutation interceptors
-  static List<VxInterceptor> _interceptors;
+  static late List<VxInterceptor> _interceptors;
 
   /// This controller serves as the event broadcasting bus
   /// for the app.
-  static final _events = StreamController<VxMutation>.broadcast();
+  static final StreamController<VxMutation<VxStore?>> _events =
+      StreamController<VxMutation>.broadcast();
 
   /// Broadcast stream of mutations executing across app
   static Stream<VxMutation> get events => _events.stream;
 
   /// Single store approach. This is set when initializing the app.
-  static VxStore _store;
+  static late VxStore? _store;
 
   /// Getter to get the current instance of [VxStore]. It can be
   /// casted to appropriate type by the widgets.
-  static VxStore get store => _store;
+  static VxStore get store => _store!;
 
   /// Keeps the set of mutations executed between previous and
   /// current build cycle.
@@ -62,10 +63,10 @@ class VxState extends StatelessWidget {
     return _events.stream.where((e) => e.runtimeType == mutation);
   }
 
-  /// Attaches context to the mutations given in `to` param.
+  /// Attaches context to the mutations given in `on` param.
   /// When a mutation specified execute widget will rebuild.
-  static void listen(BuildContext context, {List<Type> to}) {
-    for (var mutant in to) {
+  static void watch(BuildContext context, {required List<Type> on}) {
+    for (final mutant in on) {
       context.dependOnInheritedWidgetOfExactType<_VxStateModel>(
         aspect: mutant,
       );
@@ -75,23 +76,18 @@ class VxState extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    if (events != null) {
-      events.forEach((element) {
-        properties.add(DiagnosticsProperty(
-            element.runtimeType.toString(), element.store.toString()));
-      });
-    }
+    events.forEach((element) {
+      properties.add(DiagnosticsProperty(
+          element.runtimeType.toString(), element.store.toString()));
+    });
   }
 
   /// Constructor collects the store instance and interceptors.
   VxState({
-    @required VxStore store,
-    @required this.child,
+    required VxStore store,
+    required this.child,
     List<VxInterceptor> interceptors = const [],
   }) {
-    assert(store != null, "Uninitialized store");
-    assert(interceptors != null, "Interceptor list can't be null");
-
     VxState._store = store;
     VxState._interceptors = interceptors;
   }
@@ -103,6 +99,7 @@ class VxState extends StatelessWidget {
       builder: (context, _) {
         // Copy all the mutations that executed before
         // current build and clear that buffer
+        // ignore: prefer_typing_uninitialized_variables
         var clone;
         if (_buffer.isNotEmpty) {
           clone = <Type>{}..addAll(_buffer);
@@ -113,7 +110,7 @@ class VxState extends StatelessWidget {
 
         // Rebuild inherited model with all the mutations
         // inside "clone" as the aspects changed
-        return _VxStateModel(child: child, recent: clone);
+        return _VxStateModel(child: child!, recent: clone);
       },
     );
   }
