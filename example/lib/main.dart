@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MyStore store = VxState.store as MyStore;
-    // VxState.listen(context, to: [FetchApi]);
+    // VxState.watch(context, on: [FetchApi]);
     print("Build Called");
 
     return Scaffold(
